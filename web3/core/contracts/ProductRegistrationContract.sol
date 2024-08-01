@@ -20,6 +20,7 @@ contract ProductRegistrationContract {
     //     string picture;
     //     address owmer;
     //     ProductStatus status;
+    //     address[] owners;
     // }
 
     // Mappings
@@ -32,7 +33,8 @@ contract ProductRegistrationContract {
         uint256 _value,
         string _picture,
         address _owner,
-        ProductStatus status
+        ProductStatus status,
+        address[] owners
     );
     event ProductUpdated(
         uint8 _id,
@@ -40,7 +42,8 @@ contract ProductRegistrationContract {
         uint256 _value,
         string _picture,
         address _owner,
-        ProductStatus status
+        ProductStatus status,
+        address[] owners
     );
 
     function addProduct(
@@ -63,8 +66,15 @@ contract ProductRegistrationContract {
             _value,
             _picture,
             msg.sender,
-            ProductStatus.Pending
+            ProductStatus.Pending,
+            new address[](0)
         );
+
+        // Push owner to product owners array
+        appendOwnerToProductOwners(productIdCounter, msg.sender);
+
+        // Incremement Products id counter
+        productIdCounter++;
 
         emit NewProductAdded(
             productIdCounter,
@@ -72,8 +82,18 @@ contract ProductRegistrationContract {
             _value,
             _picture,
             msg.sender,
-            ProductStatus.Pending
+            ProductStatus.Pending,
+            new address[](0)
         );
+    }
+
+    function appendOwnerToProductOwners(
+        uint8 _productId,
+        address _owner
+    ) public checkWeatherProductExists(_productId) {
+        Product storage product = products[_productId];
+
+        product.owners.push(_owner);
     }
 
     function showProductInfos(
@@ -88,7 +108,8 @@ contract ProductRegistrationContract {
             uint256,
             string memory,
             address,
-            ProductStatus
+            ProductStatus,
+            address[] memory
         )
     {
         Product memory product = products[_id];
@@ -99,7 +120,8 @@ contract ProductRegistrationContract {
             product.value,
             product.picture,
             product.owner,
-            product.status
+            product.status,
+            product.owners
         );
     }
 
@@ -117,7 +139,9 @@ contract ProductRegistrationContract {
             "Must be a maker to perform this action"
         );
 
-        (, , , , address owner, ) = showProductInfos(_id);
+        (, , , , address owner, , address[] memory owners) = showProductInfos(
+            _id
+        );
 
         // Check weather msg.sender is the owner of the product
         require(
@@ -135,7 +159,8 @@ contract ProductRegistrationContract {
             _value,
             _picture,
             msg.sender,
-            ProductStatus.Pending // On reset le statut
+            ProductStatus.Pending, // Reset status
+            owners
         );
 
         emit ProductUpdated(
@@ -144,8 +169,89 @@ contract ProductRegistrationContract {
             _value,
             _picture,
             msg.sender,
-            ProductStatus.Pending
+            ProductStatus.Pending,
+            owners
         );
+    }
+
+    function approveOrRejectProduct(
+        uint8 _productId,
+        ProductStatus _status
+    ) public checkWeatherProductExists(_productId) {
+        (, UserRole role) = userManagement.getUser(msg.sender);
+
+        // Check weather msg.sender role is Validator
+        require(
+            role == UserRole.Validator,
+            "Must be a validator to perform this action"
+        );
+
+        require(
+            _status == ProductStatus.Validated ||
+                _status == ProductStatus.Refused,
+            "Incorrect status"
+        );
+
+        (
+            uint8 id,
+            string memory designation,
+            uint value,
+            string memory picture,
+            address owner,
+            ProductStatus status,
+            address[] memory owners
+        ) = showProductInfos(_productId);
+
+        require(
+            uint8(status) == uint8(ProductStatus.Pending),
+            "Product already treated"
+        );
+
+        // Proceed to updating of product
+        products[_productId] = Product(
+            id,
+            designation,
+            value,
+            picture,
+            owner,
+            status,
+            owners
+        );
+
+        emit ProductUpdated(
+            id,
+            designation,
+            value,
+            picture,
+            owner,
+            status,
+            owners
+        );
+    }
+
+    function transferProduct(
+        uint8 _productId,
+        address _newOwner
+    ) public checkWeatherProductExists(_productId) {
+        Product storage product = products[_productId];
+
+        // Check if msg sender is product owner
+        require(
+            msg.sender == product.owner,
+            "Only product owner can transfer product"
+        );
+
+        // Check if product is validated before transfer it
+        require(
+            product.status == ProductStatus.Validated,
+            "Product not validated yet"
+        );
+
+        // Change owner of product
+        product.owner = _newOwner;
+
+        // Add new owner to product owners array
+        product.owners.push(_newOwner);
     }
 
     modifier checkWeatherProductExists(uint8 _id) {

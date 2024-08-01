@@ -27,4 +27,5 @@ struct Product {
     string picture;
     address owmer;
     ProductStatus status;
+    address[] owners;
 }

@@ -4,7 +4,7 @@ pragma solidity ^0.8.24;
 import "./../abstract/Types.sol";
 
 interface IUserManagement {
-    function createPeople(
+    function createUser(
         address _address,
         string _username,
         UserRole _role
