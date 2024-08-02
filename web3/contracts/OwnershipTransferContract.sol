@@ -13,18 +13,28 @@ contract OwnershipTransferContract {
         );
     }
 
+    function transferProduct(
+        string memory _serialNumber,
+        address _newOwner
+    ) public {
+        productRegistrationContract.transferProduct(_serialNumber, _newOwner);
+    }
+
     function getProductOwners(
-        uint8 _productId
-    ) public returns (address[] memory) {
+        string memory _serialNumber
+    ) public view returns (address[] memory) {
         (
             ,
             ,
             ,
             ,
             ,
-            ProductStatus _status,
+            ,
+            ,
+            ,
+            ,
             address[] memory _owners
-        ) = productRegistrationContract.showProductInfos(_productId);
+        ) = productRegistrationContract.showProductInfos(_serialNumber);
 
         return _owners;
     }
