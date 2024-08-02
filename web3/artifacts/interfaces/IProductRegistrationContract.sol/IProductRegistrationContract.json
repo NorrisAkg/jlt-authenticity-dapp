@@ -39,6 +39,11 @@
     {
       "inputs": [
         {
+          "internalType": "address",
+          "name": "_creator",
+          "type": "address"
+        },
+        {
           "internalType": "string",
           "name": "_serialNumber",
           "type": "string"
@@ -183,6 +188,11 @@
           "internalType": "string",
           "name": "_serialNumber",
           "type": "string"
+        },
+        {
+          "internalType": "address",
+          "name": "_currentOwner",
+          "type": "address"
         },
         {
           "internalType": "address",

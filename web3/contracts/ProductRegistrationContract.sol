@@ -2,15 +2,17 @@
 pragma solidity ^0.8.24;
 
 import "./../abstract/Types.sol";
-import "./../interfaces/IUserManagement.sol";
+import "@openzeppelin/contracts/access/AccessControl.sol";
 
-contract ProductRegistrationContract {
-    error onlyMaker();
+contract ProductRegistrationContract is AccessControl {
     error productAlreadyExists();
     error productAlreadyValidated();
     error onlyValidator();
     error onlyAdmin();
     error InvalidReportIndex();
+
+    bytes32 VALIDATOR_ROLE = keccak256("VALIDATOR_ROLE");
+    bytes32 MANUFACTURER_ROLE = keccak256("MANUFACTURER_ROLE");
 
     event NewProductAdded(
         string serialNumber,
@@ -45,12 +47,33 @@ contract ProductRegistrationContract {
     mapping(string => Product) s_products;
     mapping(string => Report[]) public s_counterfeitReports;
 
-    IUserManagement userManagement;
-    address s_admin;
 
-    constructor(address userManagementContractAddress) {
-        userManagement = IUserManagement(userManagementContractAddress);
-        s_admin = msg.sender;
+    address public counterfeitReportedAddress;
+    address public productValidationAddress;
+    address public ownershipTransferContract;
+
+    constructor() {
+        _grantRole(DEFAULT_ADMIN_ROLE, msg.sender);
+    }
+
+    // function initialize(
+    //     address _counterfeitReportedAddress,
+    //     address _productValidationAddress,
+    //     address _ownershipTransferContract
+    // ) public {
+    //     productValidationAddress = _productValidationAddress;
+    //     counterfeitReportedAddress = _counterfeitReportedAddress;
+    //     ownershipTransferContract = _ownershipTransferContract;
+    // }
+
+    function addManufacturer(address _manufacturer) public {
+        require(hasRole(DEFAULT_ADMIN_ROLE, msg.sender), "Not the admin");
+        grantRole(MANUFACTURER_ROLE, _manufacturer);
+    }
+
+    function addValidator(address _manufacturer) public {
+        require(hasRole(DEFAULT_ADMIN_ROLE, msg.sender), "Not the admin");
+        grantRole(VALIDATOR_ROLE, _manufacturer);
     }
 
     function addProduct(
@@ -60,12 +83,9 @@ contract ProductRegistrationContract {
         string memory _picture,
         uint256 _price
     ) public {
-        UserRole role = userManagement.getUser(msg.sender);
+        require(hasRole(MANUFACTURER_ROLE, msg.sender));
 
         // Check weather msg.sender role is Maker
-        if (role != UserRole.Maker) {
-            revert onlyMaker();
-        }
 
         if (s_products[_serialNumber].status != ProductStatus.Undefined) {
             revert productAlreadyExists();
@@ -155,12 +175,8 @@ contract ProductRegistrationContract {
         string memory _description,
         uint256 _price
     ) public checkWeatherProductExists(_serialNumber) {
-        UserRole role = userManagement.getUser(msg.sender);
-
         // Check weather msg.sender role is Maker
-        if (role != UserRole.Maker) {
-            revert onlyMaker();
-        }
+        require(hasRole(MANUFACTURER_ROLE, msg.sender));
 
         (
             ,
@@ -198,21 +214,15 @@ contract ProductRegistrationContract {
         string memory _serialNumber,
         ProductStatus _status
     ) public checkWeatherProductExists(_serialNumber) {
-        UserRole role = userManagement.getUser(msg.sender);
+        require(
+            msg.sender == productValidationAddress,
+            "Not productValidation contract"
+        );
+        (, , , , , , , , ProductStatus status, ) = showProductInfos(
+            _serialNumber
+        );
 
-        // Check weather msg.sender role is Validator
-        // if (role != UserRole.Validator) {
-        //     revert onlyValidator();
-        // }
-
-        // (, , , , , , , , ProductStatus status, ) = showProductInfos(
-        //     _serialNumber
-        // );
-
-        // require(
-        //     status == ProductStatus.Pending,
-        //     "Product already treated"
-        // );
+        require(status == ProductStatus.Pending, "Product already treated");
 
         // Proceed to updating of product
         Product storage product = s_products[_serialNumber];
@@ -229,13 +239,18 @@ contract ProductRegistrationContract {
 
     function transferProduct(
         string memory _serialNumber,
+        address _currentOwner,
         address _newOwner
     ) public checkWeatherProductExists(_serialNumber) {
+        require(
+            msg.sender == ownershipTransferContract,
+            "Not ownershipTransferContract"
+        );
         Product storage product = s_products[_serialNumber];
 
         // Check if msg sender is product owner
         require(
-            msg.sender == product.owner,
+            _currentOwner == product.owner,
             "Only product owner can transfer product"
         );
 
@@ -256,7 +271,10 @@ contract ProductRegistrationContract {
         string memory _serialNumber,
         string memory _details
     ) public checkWeatherProductExists(_serialNumber) {
-        UserRole role = userManagement.getUser(msg.sender);
+        require(
+            msg.sender == counterfeitReportedAddress,
+            "Not counterfeitReported Contract"
+        );
 
         (, , , , , , , , ProductStatus status, ) = showProductInfos(
             _serialNumber
@@ -268,10 +286,6 @@ contract ProductRegistrationContract {
         );
 
         // Check weather msg.sender role is simple user
-        require(
-            role == UserRole.FinalUser,
-            "Must be a simple user to perform this action"
-        );
 
         Report memory newReport = Report({
             serialNumber: _serialNumber,
@@ -294,6 +308,10 @@ contract ProductRegistrationContract {
     function getReports(
         string memory _serialNumber
     ) public view returns (Report[] memory) {
+        require(
+            msg.sender == counterfeitReportedAddress,
+            "Not counterfeitReported Contract"
+        );
         return s_counterfeitReports[_serialNumber];
     }
 
@@ -301,9 +319,11 @@ contract ProductRegistrationContract {
         string memory _serialNumber,
         uint256 reportIndex
     ) public {
-        if (msg.sender != s_admin) {
-            revert onlyAdmin();
-        }
+        require(
+            msg.sender == counterfeitReportedAddress,
+            "Not counterfeitReported Contract"
+        );
+
         if (reportIndex >= s_counterfeitReports[_serialNumber].length) {
             revert InvalidReportIndex();
         }
@@ -314,8 +334,7 @@ contract ProductRegistrationContract {
 
     modifier checkWeatherProductExists(string memory _serialNumber) {
         require(
-            uint8(s_products[_serialNumber].status) !=
-                uint8(ProductStatus.Undefined),
+            s_products[_serialNumber].status != ProductStatus.Undefined,
             "Product does not exists"
         );
         _;

@@ -1,13 +1,6 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.8.0;
 
-enum UserRole {
-    Undefined,
-    Maker,
-    FinalUser,
-    Validator
-}
-
 enum ProductStatus {
     Undefined,
     Pending,
@@ -17,7 +10,6 @@ enum ProductStatus {
 
 struct User {
     uint256 id;
-    UserRole role;
 }
 
 struct Product {

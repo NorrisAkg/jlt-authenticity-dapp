@@ -38,12 +38,14 @@ interface IProductRegistrationContract {
     ) external;
 
     function approveOrRejectProduct(
+        address _creator,
         string memory _serialNumber,
         ProductStatus _status
     ) external;
 
     function transferProduct(
         string memory _serialNumber,
+        address _currentOwner,
         address _newOwner
     ) external;
 

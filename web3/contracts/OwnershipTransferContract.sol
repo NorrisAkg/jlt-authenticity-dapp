@@ -17,7 +17,8 @@ contract OwnershipTransferContract {
         string memory _serialNumber,
         address _newOwner
     ) public {
-        productRegistrationContract.transferProduct(_serialNumber, _newOwner);
+
+        productRegistrationContract.transferProduct(_serialNumber,msg.sender, _newOwner);
     }
 
     function getProductOwners(
