@@ -1,11 +1,14 @@
 import { ethers } from "ethers";
 import abi from "./abi/abiContract.json";
 
+// Créez un fournisseur avec `window.ethereum`
+const provider = new ethers.providers.Web3Provider(window.ethereum);
+
 // const signer = provider.getSigner()
 export const getContract = async () => {
   const signer = await provider.getSigner();
   const contract = new ethers.Contract(
-    "0xdF54e5161Be95D30c98bDCA6F6D029D8337EBB42",
+    "0xcABA4B9660824F1D4afC888D7995A023391C9e2f",
     abi,
     signer
   );
@@ -27,10 +30,14 @@ export const addProduct = async (form) => {
       signer,
       signer,
       1,
-      [],
+      []
     );
   } catch (error) {
     console.log("Error calling contract", error);
-    // throw new Error('contract call failure')
   }
+};
+
+export const validateProduct = async (serialNumber) => {
+  const contract = await getContract();
+  const signer = await provider;
 };

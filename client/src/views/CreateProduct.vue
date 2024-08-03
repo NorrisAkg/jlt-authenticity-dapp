@@ -45,6 +45,7 @@
                   <div class="input-box pb--20">
                     <label for="name" class="form-label">Product Name</label>
                     <input
+                      v-model="product.name"
                       id="name"
                       placeholder="e. g. `Digital Awesome Game`"
                     />
@@ -57,6 +58,7 @@
                     >
                     <textarea
                       id="Description"
+                      v-model="product.description"
                       rows="3"
                       placeholder="e. g. “After purchasing the product you can get item...”"
                     >
@@ -66,7 +68,11 @@
                 <div class="col-md-6">
                   <div class="input-box pb--20">
                     <label for="Size" class="form-label">Serial number</label>
-                    <input id="Size" placeholder="e. g. `Size`" />
+                    <input
+                      v-model="product.serialNumber"
+                      id="Size"
+                      placeholder="e. g. `Size`"
+                    />
                   </div>
                 </div>
                 <div class="col-md-6">
@@ -74,13 +80,20 @@
                     <label for="dollerValue" class="form-label"
                       >Item Price in $</label
                     >
-                    <input id="dollerValue" placeholder="e. g. `20$`" />
+                    <input
+                      v-model="product.price"
+                      id="dollerValue"
+                      placeholder="e. g. `20$`"
+                    />
                   </div>
                 </div>
 
                 <div class="col-md-12 col-xl-8 mt_lg--15 mt_md--15 mt_sm--15">
                   <div class="input-box">
-                    <button class="btn btn-primary btn-large w-100">
+                    <button
+                      @click="addProduct()"
+                      class="btn btn-primary btn-large w-100"
+                    >
                       Submit Item
                     </button>
                   </div>
@@ -155,8 +168,11 @@ export default {
       }
     },
 
-    createProduct: async () => {
-      createProduct(product);
+    addProduct: () => {
+      console.log("first");
+      console.log(this.product);
+      //   this.product.picture = this.selectedImage;
+      //   createProduct(this.product);
     },
   },
 };
