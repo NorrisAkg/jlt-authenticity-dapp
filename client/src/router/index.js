@@ -2,9 +2,8 @@ import { createRouter, createWebHistory } from "vue-router";
 import HomePageOne from "../views/home/HomePageOne";
 import CreateProduct from "../views/CreateProduct";
 import ProductDetails from "../views/ProductDetails";
-import Connect from "../views/Connect";
 import ExploreOne from "../views/ExploreOne";
-import Products from "../views/Products";
+import Products from "./../views/Products.vue";
 
 const routes = [
   {
@@ -32,15 +31,6 @@ const routes = [
     },
   },
   {
-    path: "/connect",
-    name: "Connect",
-    component: Connect,
-    meta: {
-      title: "Connect || Nuron - NFT Marketplace Template",
-    },
-  },
-
-  {
     path: "/explore-01",
     name: "ExploreOne",
     component: ExploreOne,
@@ -50,11 +40,11 @@ const routes = [
   },
 
   {
-    path: "/product",
+    path: "/products",
     name: "Products",
     component: Products,
     meta: {
-      title: "Product || Nuron - NFT Marketplace Template",
+      title: "Products || Nuron - NFT Marketplace Template",
     },
   },
 ];
