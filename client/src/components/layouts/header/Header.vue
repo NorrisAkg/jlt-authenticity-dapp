@@ -33,11 +33,14 @@
             id="rbt-site-header"
           >
             <div class="icon-box">
-              <router-link
+              <button
+                v-if="!account"
                 id="connectbtn"
                 class="btn btn-primary-alta btn-small"
-                >Connect wallet
-              </router-link>
+                @click="connect"
+              >
+                Connect wallet
+              </button>
             </div>
           </div>
 
@@ -182,6 +185,7 @@
 import Nav from "./Nav";
 import AppFunctions from "../../../helpers/AppFunctions";
 import Logo from "@/components/logo/Logo";
+import { ethers } from "ethers";
 
 export default {
   name: "Header",
@@ -190,8 +194,77 @@ export default {
     return {
       AppFunctions,
       isMobileSearchActive: false,
+      ethereum: window.ethereum,
+      account: null,
     };
   },
+
+  async created() {
+    await this.checkConnection();
+    this.setupEventListeners();
+  },
+
+  methods: {
+    connect: async () => {
+      if (window.ethereum) {
+        try {
+          // Demandez la connexion au portefeuille (si ce n'est pas déjà fait)
+          await window.ethereum.request({ method: "eth_requestAccounts" });
+
+          // Créez un fournisseur avec `window.ethereum`
+          const provider = new ethers.providers.Web3Provider(window.ethereum);
+
+          // Obtenez un signer pour signer les transactions
+          const signer = provider.getSigner();
+
+          // Obtenez l'adresse du compte
+          const address = await signer.getAddress();
+          console.log("Connected address:", address);
+
+          // Optionnel : obtenir la chaîne actuelle
+          const network = await provider.getNetwork();
+          console.log("Network:", network.name);
+        } catch (error) {
+          console.error("Error connecting to wallet:", error);
+        }
+      } else {
+        console.error("No Ethereum provider found");
+      }
+    },
+
+    async checkConnection() {
+      if (window.ethereum) {
+        const provider = new ethers.providers.Web3Provider(window.ethereum);
+        const accounts = await provider.listAccounts();
+        if (accounts.length > 0) {
+          this.account = accounts[0];
+        }
+      }
+    },
+
+    setupEventListeners() {
+      // Écoute les changements de compte
+      window.ethereum.on("accountsChanged", (accounts) => {
+        if (accounts.length > 0) {
+          this.account = accounts[0];
+        } else {
+          this.account = null;
+        }
+      });
+
+      // Écoute les changements de réseau
+      window.ethereum.on("networkChanged", (networkId) => {
+        console.log("Network changed:", networkId);
+        // Vous pouvez également ajouter la logique pour gérer les changements de réseau ici
+      });
+
+      // Écoute les événements de déconnexion
+      window.ethereum.on("disconnect", () => {
+        this.account = null;
+      });
+    },
+  },
+
   mounted() {
     const header = document.querySelector(".header--sticky");
     const setStickyHeader = () => {
@@ -203,6 +276,17 @@ export default {
       }
     };
     window.addEventListener("scroll", setStickyHeader);
+
+    if (window.ethereum) {
+      const provider = new ethers.providers.Web3Provider(window.ethereum);
+
+      // Exemple : obtenir le compte actuel
+      provider.listAccounts().then((accounts) => {
+        console.log("Accounts:", accounts);
+      });
+    } else {
+      console.error("Ethereum provider not found");
+    }
   },
 };
 </script>
