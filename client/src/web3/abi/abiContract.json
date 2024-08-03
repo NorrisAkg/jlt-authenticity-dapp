@@ -5,158 +5,497 @@
         "type": "constructor"
     },
     {
-        "anonymous": false,
-        "inputs": [
-            {
-                "indexed": true,
-                "internalType": "uint256",
-                "name": "campaignId",
-                "type": "uint256"
-            },
-            {
-                "indexed": false,
-                "internalType": "uint256",
-                "name": "amountCollected",
-                "type": "uint256"
-            }
-        ],
-        "name": "CampaignCompleted",
-        "type": "event"
+        "inputs": [],
+        "name": "AccessControlBadConfirmation",
+        "type": "error"
     },
     {
-        "anonymous": false,
         "inputs": [
             {
-                "indexed": true,
-                "internalType": "uint256",
-                "name": "campaignId",
-                "type": "uint256"
-            },
-            {
-                "indexed": false,
                 "internalType": "address",
-                "name": "owner",
+                "name": "account",
                 "type": "address"
             },
             {
-                "indexed": false,
-                "internalType": "string",
-                "name": "title",
-                "type": "string"
-            },
-            {
-                "indexed": false,
-                "internalType": "uint256",
-                "name": "target",
-                "type": "uint256"
-            },
-            {
-                "indexed": false,
-                "internalType": "uint256",
-                "name": "deadline",
-                "type": "uint256"
+                "internalType": "bytes32",
+                "name": "neededRole",
+                "type": "bytes32"
             }
         ],
-        "name": "CampaignCreated",
-        "type": "event"
-    },
-    {
-        "anonymous": false,
-        "inputs": [
-            {
-                "indexed": false,
-                "internalType": "uint256",
-                "name": "amount",
-                "type": "uint256"
-            }
-        ],
-        "name": "DeveloperFundsWithdrawn",
-        "type": "event"
-    },
-    {
-        "anonymous": false,
-        "inputs": [
-            {
-                "indexed": true,
-                "internalType": "uint256",
-                "name": "campaignId",
-                "type": "uint256"
-            },
-            {
-                "indexed": false,
-                "internalType": "address",
-                "name": "donator",
-                "type": "address"
-            },
-            {
-                "indexed": false,
-                "internalType": "uint256",
-                "name": "amount",
-                "type": "uint256"
-            }
-        ],
-        "name": "DonationReceived",
-        "type": "event"
+        "name": "AccessControlUnauthorizedAccount",
+        "type": "error"
     },
     {
         "inputs": [
-            {
-                "internalType": "uint256",
-                "name": "",
-                "type": "uint256"
-            }
-        ],
-        "name": "campaigns",
-        "outputs": [
             {
                 "internalType": "address",
-                "name": "owner",
+                "name": "_manufacturer",
                 "type": "address"
-            },
-            {
-                "internalType": "string",
-                "name": "title",
-                "type": "string"
-            },
-            {
-                "internalType": "string",
-                "name": "description",
-                "type": "string"
-            },
-            {
-                "internalType": "uint256",
-                "name": "target",
-                "type": "uint256"
-            },
-            {
-                "internalType": "uint256",
-                "name": "deadline",
-                "type": "uint256"
-            },
-            {
-                "internalType": "uint256",
-                "name": "amountCollected",
-                "type": "uint256"
-            },
-            {
-                "internalType": "string",
-                "name": "image",
-                "type": "string"
-            },
-            {
-                "internalType": "bool",
-                "name": "completed",
-                "type": "bool"
             }
         ],
-        "stateMutability": "view",
+        "name": "addManufacturer",
+        "outputs": [],
+        "stateMutability": "nonpayable",
         "type": "function"
     },
     {
         "inputs": [
             {
                 "internalType": "string",
-                "name": "_title",
+                "name": "_serialNumber",
+                "type": "string"
+            },
+            {
+                "internalType": "string",
+                "name": "_name",
+                "type": "string"
+            },
+            {
+                "internalType": "string",
+                "name": "_description",
+                "type": "string"
+            },
+            {
+                "internalType": "string",
+                "name": "_picture",
+                "type": "string"
+            },
+            {
+                "internalType": "uint256",
+                "name": "_price",
+                "type": "uint256"
+            }
+        ],
+        "name": "addProduct",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "address",
+                "name": "_validator",
+                "type": "address"
+            }
+        ],
+        "name": "addValidator",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "string",
+                "name": "_serialNumber",
+                "type": "string"
+            },
+            {
+                "internalType": "enum ProductStatus",
+                "name": "_status",
+                "type": "uint8"
+            }
+        ],
+        "name": "approveOrRejectProduct",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "bytes32",
+                "name": "role",
+                "type": "bytes32"
+            },
+            {
+                "internalType": "address",
+                "name": "account",
+                "type": "address"
+            }
+        ],
+        "name": "grantRole",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "inputs": [],
+        "name": "InvalidReportIndex",
+        "type": "error"
+    },
+    {
+        "inputs": [],
+        "name": "ProductAlreadyExists",
+        "type": "error"
+    },
+    {
+        "inputs": [],
+        "name": "ProductAlreadyValidated",
+        "type": "error"
+    },
+    {
+        "anonymous": false,
+        "inputs": [
+            {
+                "indexed": true,
+                "internalType": "string",
+                "name": "serialNumber",
+                "type": "string"
+            },
+            {
+                "indexed": false,
+                "internalType": "string",
+                "name": "message",
+                "type": "string"
+            }
+        ],
+        "name": "AlertIssued",
+        "type": "event"
+    },
+    {
+        "anonymous": false,
+        "inputs": [
+            {
+                "indexed": true,
+                "internalType": "string",
+                "name": "serialNumber",
+                "type": "string"
+            },
+            {
+                "indexed": true,
+                "internalType": "address",
+                "name": "reporter",
+                "type": "address"
+            },
+            {
+                "indexed": false,
+                "internalType": "string",
+                "name": "details",
+                "type": "string"
+            }
+        ],
+        "name": "CounterfeitReported",
+        "type": "event"
+    },
+    {
+        "anonymous": false,
+        "inputs": [
+            {
+                "indexed": false,
+                "internalType": "string",
+                "name": "serialNumber",
+                "type": "string"
+            },
+            {
+                "indexed": false,
+                "internalType": "string",
+                "name": "name",
+                "type": "string"
+            },
+            {
+                "indexed": false,
+                "internalType": "string",
+                "name": "description",
+                "type": "string"
+            },
+            {
+                "indexed": false,
+                "internalType": "string",
+                "name": "picture",
+                "type": "string"
+            },
+            {
+                "indexed": false,
+                "internalType": "uint256",
+                "name": "price",
+                "type": "uint256"
+            },
+            {
+                "indexed": false,
+                "internalType": "uint256",
+                "name": "registrationDate",
+                "type": "uint256"
+            },
+            {
+                "indexed": false,
+                "internalType": "address",
+                "name": "manufacturer",
+                "type": "address"
+            },
+            {
+                "indexed": false,
+                "internalType": "address",
+                "name": "owner",
+                "type": "address"
+            },
+            {
+                "indexed": false,
+                "internalType": "enum ProductStatus",
+                "name": "status",
+                "type": "uint8"
+            },
+            {
+                "indexed": false,
+                "internalType": "address[]",
+                "name": "owners",
+                "type": "address[]"
+            }
+        ],
+        "name": "NewProductAdded",
+        "type": "event"
+    },
+    {
+        "anonymous": false,
+        "inputs": [
+            {
+                "indexed": false,
+                "internalType": "string",
+                "name": "serialNumber",
+                "type": "string"
+            },
+            {
+                "indexed": false,
+                "internalType": "enum ProductStatus",
+                "name": "status",
+                "type": "uint8"
+            },
+            {
+                "indexed": false,
+                "internalType": "string",
+                "name": "message",
+                "type": "string"
+            }
+        ],
+        "name": "ProductStatusChanged",
+        "type": "event"
+    },
+    {
+        "anonymous": false,
+        "inputs": [
+            {
+                "indexed": false,
+                "internalType": "string",
+                "name": "serialNumber",
+                "type": "string"
+            },
+            {
+                "indexed": false,
+                "internalType": "string",
+                "name": "name",
+                "type": "string"
+            },
+            {
+                "indexed": false,
+                "internalType": "string",
+                "name": "description",
+                "type": "string"
+            },
+            {
+                "indexed": false,
+                "internalType": "uint256",
+                "name": "price",
+                "type": "uint256"
+            }
+        ],
+        "name": "ProductUpdated",
+        "type": "event"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "bytes32",
+                "name": "role",
+                "type": "bytes32"
+            },
+            {
+                "internalType": "address",
+                "name": "callerConfirmation",
+                "type": "address"
+            }
+        ],
+        "name": "renounceRole",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "string",
+                "name": "_serialNumber",
+                "type": "string"
+            },
+            {
+                "internalType": "string",
+                "name": "_details",
+                "type": "string"
+            }
+        ],
+        "name": "reportProduct",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "anonymous": false,
+        "inputs": [
+            {
+                "indexed": true,
+                "internalType": "string",
+                "name": "serialNumber",
+                "type": "string"
+            },
+            {
+                "indexed": false,
+                "internalType": "uint256",
+                "name": "reportIndex",
+                "type": "uint256"
+            }
+        ],
+        "name": "ReportResolved",
+        "type": "event"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "string",
+                "name": "_serialNumber",
+                "type": "string"
+            },
+            {
+                "internalType": "uint256",
+                "name": "reportIndex",
+                "type": "uint256"
+            }
+        ],
+        "name": "resolveReport",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "bytes32",
+                "name": "role",
+                "type": "bytes32"
+            },
+            {
+                "internalType": "address",
+                "name": "account",
+                "type": "address"
+            }
+        ],
+        "name": "revokeRole",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "anonymous": false,
+        "inputs": [
+            {
+                "indexed": true,
+                "internalType": "bytes32",
+                "name": "role",
+                "type": "bytes32"
+            },
+            {
+                "indexed": true,
+                "internalType": "bytes32",
+                "name": "previousAdminRole",
+                "type": "bytes32"
+            },
+            {
+                "indexed": true,
+                "internalType": "bytes32",
+                "name": "newAdminRole",
+                "type": "bytes32"
+            }
+        ],
+        "name": "RoleAdminChanged",
+        "type": "event"
+    },
+    {
+        "anonymous": false,
+        "inputs": [
+            {
+                "indexed": true,
+                "internalType": "bytes32",
+                "name": "role",
+                "type": "bytes32"
+            },
+            {
+                "indexed": true,
+                "internalType": "address",
+                "name": "account",
+                "type": "address"
+            },
+            {
+                "indexed": true,
+                "internalType": "address",
+                "name": "sender",
+                "type": "address"
+            }
+        ],
+        "name": "RoleGranted",
+        "type": "event"
+    },
+    {
+        "anonymous": false,
+        "inputs": [
+            {
+                "indexed": true,
+                "internalType": "bytes32",
+                "name": "role",
+                "type": "bytes32"
+            },
+            {
+                "indexed": true,
+                "internalType": "address",
+                "name": "account",
+                "type": "address"
+            },
+            {
+                "indexed": true,
+                "internalType": "address",
+                "name": "sender",
+                "type": "address"
+            }
+        ],
+        "name": "RoleRevoked",
+        "type": "event"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "string",
+                "name": "_serialNumber",
+                "type": "string"
+            },
+            {
+                "internalType": "address",
+                "name": "_newOwner",
+                "type": "address"
+            }
+        ],
+        "name": "transferProduct",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "string",
+                "name": "_serialNumber",
+                "type": "string"
+            },
+            {
+                "internalType": "string",
+                "name": "_name",
                 "type": "string"
             },
             {
@@ -166,52 +505,23 @@
             },
             {
                 "internalType": "uint256",
-                "name": "_target",
-                "type": "uint256"
-            },
-            {
-                "internalType": "uint256",
-                "name": "_deadline",
-                "type": "uint256"
-            },
-            {
-                "internalType": "string",
-                "name": "_image",
-                "type": "string"
-            }
-        ],
-        "name": "createCampaign",
-        "outputs": [
-            {
-                "internalType": "uint256",
-                "name": "",
+                "name": "_price",
                 "type": "uint256"
             }
         ],
+        "name": "updateProduct",
+        "outputs": [],
         "stateMutability": "nonpayable",
         "type": "function"
     },
     {
         "inputs": [],
-        "name": "developer",
+        "name": "DEFAULT_ADMIN_ROLE",
         "outputs": [
             {
-                "internalType": "address",
+                "internalType": "bytes32",
                 "name": "",
-                "type": "address"
-            }
-        ],
-        "stateMutability": "view",
-        "type": "function"
-    },
-    {
-        "inputs": [],
-        "name": "developerBalance",
-        "outputs": [
-            {
-                "internalType": "uint256",
-                "name": "",
-                "type": "uint256"
+                "type": "bytes32"
             }
         ],
         "stateMutability": "view",
@@ -220,145 +530,37 @@
     {
         "inputs": [
             {
-                "internalType": "uint256",
-                "name": "_id",
-                "type": "uint256"
+                "internalType": "string",
+                "name": "_serialNumber",
+                "type": "string"
             }
         ],
-        "name": "donateToCampaign",
-        "outputs": [],
-        "stateMutability": "payable",
-        "type": "function"
-    },
-    {
-        "inputs": [
-            {
-                "internalType": "uint256",
-                "name": "_id",
-                "type": "uint256"
-            }
-        ],
-        "name": "getCampaign",
+        "name": "getReports",
         "outputs": [
             {
                 "components": [
                     {
+                        "internalType": "string",
+                        "name": "serialNumber",
+                        "type": "string"
+                    },
+                    {
                         "internalType": "address",
-                        "name": "owner",
+                        "name": "reporter",
                         "type": "address"
                     },
                     {
                         "internalType": "string",
-                        "name": "title",
-                        "type": "string"
-                    },
-                    {
-                        "internalType": "string",
-                        "name": "description",
+                        "name": "details",
                         "type": "string"
                     },
                     {
                         "internalType": "uint256",
-                        "name": "target",
+                        "name": "reportDate",
                         "type": "uint256"
-                    },
-                    {
-                        "internalType": "uint256",
-                        "name": "deadline",
-                        "type": "uint256"
-                    },
-                    {
-                        "internalType": "uint256",
-                        "name": "amountCollected",
-                        "type": "uint256"
-                    },
-                    {
-                        "internalType": "string",
-                        "name": "image",
-                        "type": "string"
-                    },
-                    {
-                        "internalType": "address[]",
-                        "name": "donators",
-                        "type": "address[]"
-                    },
-                    {
-                        "internalType": "uint256[]",
-                        "name": "donations",
-                        "type": "uint256[]"
-                    },
-                    {
-                        "internalType": "bool",
-                        "name": "completed",
-                        "type": "bool"
                     }
                 ],
-                "internalType": "struct CrowdFunding.Campaign",
-                "name": "",
-                "type": "tuple"
-            }
-        ],
-        "stateMutability": "view",
-        "type": "function"
-    },
-    {
-        "inputs": [],
-        "name": "getCampaigns",
-        "outputs": [
-            {
-                "components": [
-                    {
-                        "internalType": "address",
-                        "name": "owner",
-                        "type": "address"
-                    },
-                    {
-                        "internalType": "string",
-                        "name": "title",
-                        "type": "string"
-                    },
-                    {
-                        "internalType": "string",
-                        "name": "description",
-                        "type": "string"
-                    },
-                    {
-                        "internalType": "uint256",
-                        "name": "target",
-                        "type": "uint256"
-                    },
-                    {
-                        "internalType": "uint256",
-                        "name": "deadline",
-                        "type": "uint256"
-                    },
-                    {
-                        "internalType": "uint256",
-                        "name": "amountCollected",
-                        "type": "uint256"
-                    },
-                    {
-                        "internalType": "string",
-                        "name": "image",
-                        "type": "string"
-                    },
-                    {
-                        "internalType": "address[]",
-                        "name": "donators",
-                        "type": "address[]"
-                    },
-                    {
-                        "internalType": "uint256[]",
-                        "name": "donations",
-                        "type": "uint256[]"
-                    },
-                    {
-                        "internalType": "bool",
-                        "name": "completed",
-                        "type": "bool"
-                    }
-                ],
-                "internalType": "struct CrowdFunding.Campaign[]",
+                "internalType": "struct Report[]",
                 "name": "",
                 "type": "tuple[]"
             }
@@ -369,22 +571,79 @@
     {
         "inputs": [
             {
-                "internalType": "uint256",
-                "name": "_id",
-                "type": "uint256"
+                "internalType": "bytes32",
+                "name": "role",
+                "type": "bytes32"
             }
         ],
-        "name": "getDonators",
+        "name": "getRoleAdmin",
         "outputs": [
             {
-                "internalType": "address[]",
+                "internalType": "bytes32",
                 "name": "",
-                "type": "address[]"
+                "type": "bytes32"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "bytes32",
+                "name": "role",
+                "type": "bytes32"
             },
             {
-                "internalType": "uint256[]",
+                "internalType": "address",
+                "name": "account",
+                "type": "address"
+            }
+        ],
+        "name": "hasRole",
+        "outputs": [
+            {
+                "internalType": "bool",
                 "name": "",
-                "type": "uint256[]"
+                "type": "bool"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "address",
+                "name": "_manufacturer",
+                "type": "address"
+            }
+        ],
+        "name": "loginManufacturer",
+        "outputs": [
+            {
+                "internalType": "bool",
+                "name": "",
+                "type": "bool"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "address",
+                "name": "_validator",
+                "type": "address"
+            }
+        ],
+        "name": "loginValidator",
+        "outputs": [
+            {
+                "internalType": "bool",
+                "name": "",
+                "type": "bool"
             }
         ],
         "stateMutability": "view",
@@ -392,7 +651,20 @@
     },
     {
         "inputs": [],
-        "name": "numberOfCampaigns",
+        "name": "MANUFACTURER_ROLE",
+        "outputs": [
+            {
+                "internalType": "bytes32",
+                "name": "",
+                "type": "bytes32"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [],
+        "name": "s_alertThreshold",
         "outputs": [
             {
                 "internalType": "uint256",
@@ -406,21 +678,149 @@
     {
         "inputs": [
             {
+                "internalType": "string",
+                "name": "",
+                "type": "string"
+            },
+            {
                 "internalType": "uint256",
-                "name": "_campaignId",
+                "name": "",
                 "type": "uint256"
             }
         ],
-        "name": "withdrawCampaignFunds",
-        "outputs": [],
-        "stateMutability": "nonpayable",
+        "name": "s_counterfeitReports",
+        "outputs": [
+            {
+                "internalType": "string",
+                "name": "serialNumber",
+                "type": "string"
+            },
+            {
+                "internalType": "address",
+                "name": "reporter",
+                "type": "address"
+            },
+            {
+                "internalType": "string",
+                "name": "details",
+                "type": "string"
+            },
+            {
+                "internalType": "uint256",
+                "name": "reportDate",
+                "type": "uint256"
+            }
+        ],
+        "stateMutability": "view",
         "type": "function"
     },
     {
         "inputs": [],
-        "name": "withdrawDeveloperFunds",
-        "outputs": [],
-        "stateMutability": "nonpayable",
+        "name": "s_productIdCounter",
+        "outputs": [
+            {
+                "internalType": "uint8",
+                "name": "",
+                "type": "uint8"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "string",
+                "name": "_serialNumber",
+                "type": "string"
+            }
+        ],
+        "name": "showProductInfos",
+        "outputs": [
+            {
+                "internalType": "string",
+                "name": "",
+                "type": "string"
+            },
+            {
+                "internalType": "string",
+                "name": "",
+                "type": "string"
+            },
+            {
+                "internalType": "string",
+                "name": "",
+                "type": "string"
+            },
+            {
+                "internalType": "string",
+                "name": "",
+                "type": "string"
+            },
+            {
+                "internalType": "uint256",
+                "name": "",
+                "type": "uint256"
+            },
+            {
+                "internalType": "uint256",
+                "name": "",
+                "type": "uint256"
+            },
+            {
+                "internalType": "address",
+                "name": "",
+                "type": "address"
+            },
+            {
+                "internalType": "address",
+                "name": "",
+                "type": "address"
+            },
+            {
+                "internalType": "enum ProductStatus",
+                "name": "",
+                "type": "uint8"
+            },
+            {
+                "internalType": "address[]",
+                "name": "",
+                "type": "address[]"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "bytes4",
+                "name": "interfaceId",
+                "type": "bytes4"
+            }
+        ],
+        "name": "supportsInterface",
+        "outputs": [
+            {
+                "internalType": "bool",
+                "name": "",
+                "type": "bool"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [],
+        "name": "VALIDATOR_ROLE",
+        "outputs": [
+            {
+                "internalType": "bytes32",
+                "name": "",
+                "type": "bytes32"
+            }
+        ],
+        "stateMutability": "view",
         "type": "function"
     }
 ]

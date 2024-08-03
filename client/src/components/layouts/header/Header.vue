@@ -41,6 +41,15 @@
               >
                 Connect wallet
               </button>
+
+              <button
+                v-else
+                id="connectbtn"
+                class="btn btn-primary-alta btn-small"
+                @click="this.$router.push('/new-product')"
+              >
+                Add product
+              </button>
             </div>
           </div>
 
@@ -186,8 +195,10 @@ import Nav from "./Nav";
 import AppFunctions from "../../../helpers/AppFunctions";
 import Logo from "@/components/logo/Logo";
 import { ethers } from "ethers";
+import { useRouter } from "vue-router";
 
 export default {
+  router: useRouter(),
   name: "Header",
   components: { Logo, Nav },
   data() {

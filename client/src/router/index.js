@@ -15,11 +15,11 @@ const routes = [
     },
   },
   {
-    path: "/create",
+    path: "/new-product",
     name: "CreateProduct",
     component: CreateProduct,
     meta: {
-      title: "Create || Nuron - NFT Marketplace Template",
+      title: "New product || Nuron - NFT Marketplace Template",
     },
   },
   {
